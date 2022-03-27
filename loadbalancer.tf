@@ -1,16 +1,15 @@
 resource "aws_lb" "alb" {
-  name               = "alb"
+  name               = "alb-npmapp"
   subnets            = data.aws_subnet_ids.defaultsubnet.ids
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lb.id]
 
   tags = {
-    Environment = "development"
     Application = "npmapp"
   }
 }
 
-resource "aws_lb_listener" "https_forward" {
+resource "aws_lb_listener" "http_forward" {
   load_balancer_arn = aws_lb.alb.arn
   port              = 80
   protocol          = "HTTP"

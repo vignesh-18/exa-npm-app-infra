@@ -9,7 +9,7 @@ data "aws_vpc" "defaultvpc" {
 retrieving all subnets in default vpc
 */
 data "aws_subnet_ids" "defaultsubnet" {
-  vpc_id = "${data.aws_vpc.defaultvpc.id}"
+  vpc_id = data.aws_vpc.defaultvpc.id
 }
 
 # data "aws_subnet" "test_subnet" {
