@@ -1,13 +1,17 @@
+resource "aws_ecs_cluster" "npmcluster" {
+  name = "${var.prefix}-cluster"
+}
+
 data "template_file" "apptemplate" {
   template = file("./npmapp.json.tpl")
   vars = {
     aws_ecr_repository = aws_ecr_repository.repo.repository_url
-    tag                = "latest"
+    tag                = "${var.tag}"
   }
 }
 
 resource "aws_ecs_task_definition" "task" {
-  family                   = "npmapp-containerised"
+  family                   = "npmapp"
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   cpu                      = 256
@@ -21,7 +25,7 @@ resource "aws_ecs_task_definition" "task" {
 
 resource "aws_ecs_service" "service" {
   name            = "staging"
-  cluster         = aws_ecs_cluster.staging.id
+  cluster         = aws_ecs_cluster.npmcluster.id
   task_definition = aws_ecs_task_definition.task.arn
   desired_count   = 1
   launch_type     = "FARGATE"
@@ -34,7 +38,7 @@ resource "aws_ecs_service" "service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.tg.arn
-    container_name   = "npmapp"
+    container_name   = "npmapp-container"
     container_port   = 3000
   }
 
@@ -52,8 +56,4 @@ resource "aws_cloudwatch_log_group" "lg" {
   tags = {
     Application = "npmapp"
   }
-}
-
-resource "aws_ecs_cluster" "staging" {
-  name = "npmapp-cluster"
 }

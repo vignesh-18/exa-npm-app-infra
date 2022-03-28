@@ -1,6 +1,6 @@
 [
   {
-    "name": "npmapp",
+    "name": "npmapp-container",
     "image": "${aws_ecr_repository}:${tag}",
     "essential": true,
     "logConfiguration": {

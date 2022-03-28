@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "repo" {
-  name = "exa/test/npmapp"
+  name = "exa/npmapp"
 }
 
 resource "aws_ecr_lifecycle_policy" "repo-policy" {
@@ -50,9 +50,9 @@ variable "tag" {
 
 data "aws_caller_identity" "current" {}
 
-resource "null_resource" "pushs" {
-    provisioner "local-exec" {
-    command     = "${coalesce("./push.sh", "${path.module}/push.sh")} ${var.source_path} ${aws_ecr_repository.repo.repository_url} ${var.tag} ${data.aws_caller_identity.current.account_id}"
-    interpreter = ["PowerShell", "-Command"]
-  }
-}
+# resource "null_resource" "pushs" {
+#     provisioner "local-exec" {
+#     command     = "${coalesce("./push.sh", "${path.module}/push.sh")} ${var.source_path} ${aws_ecr_repository.repo.repository_url} ${var.tag} ${data.aws_caller_identity.current.account_id}"
+#     interpreter = ["PowerShell", "-Command"]
+#   }
+# }
