@@ -1,11 +1,11 @@
 resource "aws_lb" "alb" {
-  name               = "alb-npmapp"
+  name               = "${var.prefix}-alb-npmapp"
   subnets            = data.aws_subnet_ids.defaultsubnet.ids
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lb.id]
 
   tags = {
-    Application = "npmapp"
+    Application = "${var.tag}"
   }
 }
 
@@ -21,7 +21,7 @@ resource "aws_lb_listener" "http_forward" {
 }
 
 resource "aws_lb_target_group" "tg" {
-  name        = "npmapp-alb-tg"
+  name        = "${var.prefix}-alb-tg"
   port        = 3000
   protocol    = "HTTP"
   vpc_id      = data.aws_vpc.defaultvpc.id

@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "repo" {
-  name = "exa/npmapp"
+  name = var.repo
 }
 
 resource "aws_ecr_lifecycle_policy" "repo-policy" {
@@ -37,18 +37,6 @@ resource "aws_ecr_lifecycle_policy" "repo-policy" {
 }
 EOF
 }
-
-variable "source_path" {
-  description = "source path for project"
-  default     = "./project"
-}
-
-variable "tag" {
-  description = "tag to use for our new docker image"
-  default     = "latest"
-}
-
-data "aws_caller_identity" "current" {}
 
 # resource "null_resource" "pushs" {
 #     provisioner "local-exec" {

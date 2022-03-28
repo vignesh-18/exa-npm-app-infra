@@ -1,6 +1,6 @@
 [
   {
-    "name": "npmapp-container",
+    "name": "${container_name}",
     "image": "${aws_ecr_repository}:${tag}",
     "essential": true,
     "logConfiguration": {
@@ -8,7 +8,7 @@
       "options": {
         "awslogs-region": "us-east-1",
         "awslogs-stream-prefix": "npm-service",
-        "awslogs-group": "aws-terraform-log-group"
+        "awslogs-group": "${log_group}"
       }
     },
     "portMappings": [

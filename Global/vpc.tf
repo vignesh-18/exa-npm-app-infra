@@ -29,7 +29,7 @@ data "aws_subnet_ids" "defaultsubnet" {
 creating a security group for application load balancer
 */
 resource "aws_security_group" "lb" {
-  name        = "lb-sg"
+  name        = "${var.tag}-lb-sg"
   description = "controls access to the Application Load Balancer (ALB)"
 
   ingress {
@@ -51,7 +51,7 @@ resource "aws_security_group" "lb" {
 creating a security group for ecs tasks
 */
 resource "aws_security_group" "ecs_tasks" {
-  name        = "ecs-tasks-sg"
+  name        = "${var.prefix}-ecs-tasks-sg"
   description = "allow inbound access from the ALB only"
 
   ingress {

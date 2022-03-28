@@ -6,7 +6,9 @@ data "template_file" "apptemplate" {
   template = file("./npmapp.json.tpl")
   vars = {
     aws_ecr_repository = aws_ecr_repository.repo.repository_url
-    tag                = "${var.tag}"
+    tag                = "${var.image_tag}"
+    container_name     = "${var.container}"
+    log_group          = "${var.prefix}-log-group"
   }
 }
 
@@ -19,12 +21,12 @@ resource "aws_ecs_task_definition" "task" {
   requires_compatibilities = ["FARGATE"]
   container_definitions    = data.template_file.apptemplate.rendered
   tags = {
-    Application = "npmapp"
+    Application = "${var.tag}"
   }
 }
 
 resource "aws_ecs_service" "service" {
-  name            = "staging"
+  name            = "${var.prefix}-service"
   cluster         = aws_ecs_cluster.npmcluster.id
   task_definition = aws_ecs_task_definition.task.arn
   desired_count   = 1
@@ -38,22 +40,21 @@ resource "aws_ecs_service" "service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.tg.arn
-    container_name   = "npmapp-container"
-    container_port   = 3000
+    container_name   = var.container
+    container_port   = var.container_port
   }
 
   depends_on = [aws_lb_listener.http_forward, aws_iam_role_policy_attachment.ecs_task_execution_role]
 
   tags = {
-    Application = "npmapp"
+    Application = "${var.tag}"
   }
 }
 
-
 resource "aws_cloudwatch_log_group" "lg" {
-  name = "aws-terraform-log-group"
+  name = "${var.prefix}-log-group"
 
   tags = {
-    Application = "npmapp"
+    Application = "${var.tag}"
   }
 }

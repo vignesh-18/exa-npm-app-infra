@@ -7,7 +7,6 @@ terraform {
   }
 }
 
-
 /*
 Setting AWS region to deploy Resources and
 Path and profile to refer credentials

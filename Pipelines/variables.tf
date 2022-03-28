@@ -1,35 +1,31 @@
-# -----------------------------------------------------------------------------
-# Variables: CodePipeline
-# -----------------------------------------------------------------------------
-# variable "github_token" {
-#   type        = string
-#   description = "Github OAuth token"
-# }
+variable "prefix" {
+  description = "prefix prepended to names of all resources created"
+  default     = "terraform-npmapp"
+}
 
-# variable "github_owner" {
-#   type        = string
-#   description = "Github username"
-# }
-
-# variable "github_repo" {
-#   type        = string
-#   description = "Github repository name"
-# }
-
-# variable "github_branch" {
-#   type        = string
-#   description = "Github branch name"
-#   default     = "master"
-# }
-
-# variable "poll_source_changes" {
-#   type        = string
-#   default     = "false"
-#   description = "Periodically check the location of your source content and run the pipeline if changes are detected"
-# }
-
-# Build Project Name
 variable "build_project" {
-  type    = string
-  default = "dev-build-repo"
+  description = "build project name"
+  default     = "npmapp-build-project"
+}
+
+variable "github_app" {
+  description = "application code checkout details"
+  type        = map(any)
+  default = {
+    "owner"   = "vignesh-18"
+    "repo"    = "exa-devops-assessment"
+    "branch"  = "dockerapp"
+    "polling" = true
+  }
+}
+
+variable "env_codebuild" {
+  description = "environment details for code build project"
+  type        = map(any)
+  default = {
+    "compute"    = "BUILD_GENERAL1_SMALL"
+    "image"      = "aws/codebuild/standard:5.0"
+    "type"       = "LINUX_CONTAINER"
+    "privileged" = true
+  }
 }

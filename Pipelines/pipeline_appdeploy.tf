@@ -1,34 +1,34 @@
 # CODEBUILD
 resource "aws_codebuild_project" "repo-project" {
-  name         = "${var.build_project}"
-  service_role = "${aws_iam_role.codebuild-role.arn}"
+  name         = var.build_project
+  service_role = aws_iam_role.codebuild-role.arn
 
   artifacts {
     type = "CODEPIPELINE"
   }
 
   source {
-    type     = "CODEPIPELINE"
+    type = "CODEPIPELINE"
   }
 
-  source_version = "dockerapp"
+  # source_version = "dockerapp"
 
   environment {
-    compute_type    = "BUILD_GENERAL1_SMALL"
-    image           = "aws/codebuild/standard:5.0"
-    type            = "LINUX_CONTAINER"
-    privileged_mode = true
+    compute_type    = var.env_codebuild["compute"]
+    image           = var.env_codebuild["image"]
+    type            = var.env_codebuild["type"]
+    privileged_mode = var.env_codebuild["privileged"]
   }
 }
 
 # Artifact Bucket
 resource "aws_s3_bucket" "codepipeline_bucket" {
-  bucket = "terraform-artifact-bucket-vignesh"
+  bucket = "${var.prefix}-artifact-bucket"
 }
 
 #App Deployment Pipeline
 resource "aws_codepipeline" "codepipeline" {
-  name     = "app-deploy-pipeline"
+  name     = "${var.prefix}-deploy-pipeline"
   role_arn = aws_iam_role.codepipeline_role.arn
 
   artifact_store {
@@ -49,17 +49,17 @@ resource "aws_codepipeline" "codepipeline" {
 
       configuration = {
         OAuthToken           = "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"
-        Owner                = "vignesh-18"
-        Repo                 = "exa-devops-assessment"
-        Branch               = "dockerapp"
-        PollForSourceChanges = "true"
+        Owner                = var.github_app["owner"]
+        Repo                 = var.github_app["repo"]
+        Branch               = var.github_app["branch"]
+        PollForSourceChanges = var.github_app["polling"]
       }
     }
   }
 
   stage {
     name = "Build"
-  action {
+    action {
       name             = "BuildImage"
       category         = "Build"
       owner            = "AWS"
@@ -73,8 +73,8 @@ resource "aws_codepipeline" "codepipeline" {
       }
     }
   }
-#Deploys latest changes to ECS
-    stage {
+  #Deploys application latest changes deployed to ECS
+  stage {
     name = "Deploy"
     action {
       name            = "Deploy"
@@ -92,5 +92,3 @@ resource "aws_codepipeline" "codepipeline" {
     }
   }
 }
-
-
