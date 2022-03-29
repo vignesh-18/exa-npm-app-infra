@@ -1,5 +1,5 @@
 # CODEBUILD_PROJECT
-resource "aws_codebuild_project" "repo-project" {
+resource "aws_codebuild_project" "infra_repo_project" {
   name         = var.build_project
   service_role = aws_iam_role.codebuild-role.arn
 
@@ -19,20 +19,26 @@ resource "aws_codebuild_project" "repo-project" {
     type            = var.env_codebuild["type"]
     privileged_mode = var.env_codebuild["privileged"]
   }
+
+    environment_variable {
+      name  = "TF_COMMAND"
+      value = "apply"
+      type  = "PLAINTEXT"
+    }
 }
 
-# Artifact Bucket To store pipeline stage outputs
-resource "aws_s3_bucket" "codepipeline_bucket_app" {
-  bucket = "${var.prefix}-app-artifact-bucket"
+# Artifact Bucket
+resource "aws_s3_bucket" "codepipeline_bucket_infra" {
+  bucket = "${var.prefix}-infra-artifact-bucket"
 }
 
 #App Deployment Pipeline
-resource "aws_codepipeline" "codepipeline" {
-  name     = "${var.prefix}-deploy-pipeline"
+resource "aws_codepipeline" "infracodepipeline" {
+  name     = "${var.prefix}-infra-deploy-pipeline"
   role_arn = aws_iam_role.codepipeline_role.arn
 
   artifact_store {
-    location = aws_s3_bucket.codepipeline_bucket_app.bucket
+    location = aws_s3_bucket.codepipeline_bucket_infra.bucket
     type     = "S3"
   }
 
@@ -40,7 +46,7 @@ resource "aws_codepipeline" "codepipeline" {
     name = "Source"
 
     action {
-      name             = "CheckoutApplication"
+      name             = "CheckoutInfra"
       category         = "Source"
       owner            = "ThirdParty"
       provider         = "GitHub"
@@ -49,10 +55,10 @@ resource "aws_codepipeline" "codepipeline" {
 
       configuration = {
         OAuthToken           = jsondecode(data.aws_secretsmanager_secret_version.secret_text.secret_string)["oauth"]
-        Owner                = var.github_app["owner"]
-        Repo                 = var.github_app["repo"]
-        Branch               = var.github_app["branch"]
-        PollForSourceChanges = var.github_app["polling"]
+        Owner                = var.github_infra["owner"]
+        Repo                 = var.github_infra["repo"]
+        Branch               = var.github_infra["branch"]
+        PollForSourceChanges = var.github_infra["polling"]
       }
     }
   }
@@ -60,7 +66,7 @@ resource "aws_codepipeline" "codepipeline" {
   stage {
     name = "Build"
     action {
-      name             = "BuildImage"
+      name             = "Build"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
@@ -69,25 +75,7 @@ resource "aws_codepipeline" "codepipeline" {
       version          = "1"
 
       configuration = {
-        ProjectName = var.build_project    # Using build project to build docker image
-      }
-    }
-  }
-  #Deploys application latest changes deployed to ECS
-  stage {
-    name = "Deploy"
-    action {
-      name            = "Deploy"
-      category        = "Deploy"
-      owner           = "AWS"
-      provider        = "ECS"
-      version         = "1"
-      input_artifacts = ["build_output"]
-
-      configuration = {
-        ClusterName = "npmapp-cluster"
-        ServiceName = "staging"
-        FileName    = "imagedefinitions.json"
+        ProjectName = var.infra_build_project                 #CodeBuild project name
       }
     }
   }

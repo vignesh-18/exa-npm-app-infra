@@ -1,6 +1,6 @@
 #Provides an IAM role for pipeline
 resource "aws_iam_role" "codepipeline_role" {
-  name = "test-role"
+  name = "${var.prefix}-codepipeline-role"
 
   assume_role_policy = <<EOF
 {
@@ -20,7 +20,7 @@ EOF
 
 #Attaches an IAM role inline policy
 resource "aws_iam_role_policy" "codepipeline_policy" {
-  name = "codepipeline_policy"
+  name = "${var.prefix}-codepipeline-policy"
   role = aws_iam_role.codepipeline_role.id
 
   policy = <<EOF
@@ -37,8 +37,10 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
         "s3:PutObject"
       ],
       "Resource": [
-        "${aws_s3_bucket.codepipeline_bucket.arn}",
-        "${aws_s3_bucket.codepipeline_bucket.arn}/*"
+        "${aws_s3_bucket.codepipeline_bucket_app.arn}",
+        "${aws_s3_bucket.codepipeline_bucket_app.arn}/*",
+        "${aws_s3_bucket.codepipeline_bucket_infra.arn}",
+        "${aws_s3_bucket.codepipeline_bucket_infra.arn}/*"
       ]
     },
     {
@@ -48,6 +50,11 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
         "codebuild:StartBuild"
       ],
       "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "*",
+      "Resource": ["arn:aws:secretsmanager:us-east-1:148432897343:secret:exa-github-WSkdoe"]
     }
   ]
 }
@@ -56,7 +63,7 @@ EOF
 
 #Provides an IAM role for codebuild
 resource "aws_iam_role" "codebuild-role" {
-  name = "codebuild-role"
+  name = "${var.prefix}-codebuild-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -73,6 +80,7 @@ resource "aws_iam_role" "codebuild-role" {
 
 #Attaches an IAM role inline policy
 resource "aws_iam_role_policy" "codebuild-policy" {
+  name = "${var.prefix}-codebuild-policy"
   role = aws_iam_role.codebuild-role.name
 
   policy = jsonencode({
