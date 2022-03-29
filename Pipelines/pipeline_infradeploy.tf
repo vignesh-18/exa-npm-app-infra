@@ -1,6 +1,6 @@
 # CODEBUILD_PROJECT
 resource "aws_codebuild_project" "infra_repo_project" {
-  name         = var.build_project
+  name         = var.infra_build_project
   service_role = aws_iam_role.codebuild-role.arn
 
   artifacts {
@@ -18,13 +18,12 @@ resource "aws_codebuild_project" "infra_repo_project" {
     image           = var.env_codebuild["image"]
     type            = var.env_codebuild["type"]
     privileged_mode = var.env_codebuild["privileged"]
-  }
-
     environment_variable {
       name  = "TF_COMMAND"
       value = "apply"
       type  = "PLAINTEXT"
     }
+  }
 }
 
 # Artifact Bucket
@@ -75,7 +74,7 @@ resource "aws_codepipeline" "infracodepipeline" {
       version          = "1"
 
       configuration = {
-        ProjectName = var.infra_build_project                 #CodeBuild project name
+        ProjectName = var.infra_build_project #CodeBuild project name
       }
     }
   }
