@@ -2,8 +2,8 @@ version: 0.2
 
 env:
   variables:
-    TF_PLAN_NAME: "test"
-    TF_DEPLOYER_ROLE_ARN: "arn:aws:iam::148432897343:role/Terraform-Assume-Role"
+    TF_PLAN_NAME: test-terraform-infra
+    TF_DEPLOYER_ROLE_ARN: arn:aws:iam::148432897343:role/Terraform-Assume-Role
 
 phases:
   install:
