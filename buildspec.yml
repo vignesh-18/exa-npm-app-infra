@@ -18,7 +18,7 @@ phases:
       - export AWS_ACCESS_KEY_ID=RoleAccessKeyID
       - export AWS_SECRET_ACCESS_KEY=RoleSecretKey
       - export AWS_SESSION_TOKEN=RoleSessionToken
-      - aws sts get-caller-identity
+      # - aws sts get-caller-identity
       - echo $AWS_ACCESS_KEY_ID
       - cd Global
       - echo pwd && ls
