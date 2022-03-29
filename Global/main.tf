@@ -13,7 +13,7 @@ terraform {
     key                     = "backend_statefile"
     region                  = "us-east-1"
     profile                 = "general_account_personal"
-    shared_credentials_file = "C:/Users/Vignesh.babu/.aws/credentials"
+    # shared_credentials_file = "C:/Users/Vignesh.babu/.aws/credentials"
     dynamodb_table          = "tf-state-lock-dynamo-global"
   }
 }
@@ -26,6 +26,6 @@ Path and profile to refer credentials
 
 provider "aws" {
   region                   = "us-east-1"
-  shared_credentials_files = ["C:/Users/Vignesh.babu/.aws/credentials"]
-  profile                  = "general_account_personal"
+  # shared_credentials_files = ["C:/Users/Vignesh.babu/.aws/credentials"]
+  # profile                  = "general_account_personal"
 }
