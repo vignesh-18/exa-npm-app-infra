@@ -6,8 +6,8 @@ data "template_file" "apptemplate" {
   template = file("./npmapp.json.tpl")
   vars = {
     aws_ecr_repository = aws_ecr_repository.repo.repository_url
-    tag                = "${var.image_tag}"
-    container_name     = "${var.container}"
+    tag                = var.ecr["image_tag"]
+    container_name     = var.ecs["container_name"]
     log_group          = "${var.prefix}-log-group"
   }
 }
@@ -40,8 +40,8 @@ resource "aws_ecs_service" "service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.tg.arn
-    container_name   = var.container
-    container_port   = var.container_port
+    container_name   = var.ecs["container_name"]
+    container_port   = var.ecs["container_port"]
   }
 
   depends_on = [aws_lb_listener.http_forward, aws_iam_role_policy_attachment.ecs_task_execution_role]

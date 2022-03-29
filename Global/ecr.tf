@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "repo" {
-  name = var.repo
+  name = var.ecr["ecr_repo"]
 }
 
 resource "aws_ecr_lifecycle_policy" "repo-policy" {

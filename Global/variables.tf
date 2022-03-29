@@ -32,3 +32,21 @@ variable "tag" {
   description = "tag to use for resources"
   default     = "npmapp"
 }
+
+variable "ecs" {
+  description = "container details like port container exposed to and container name"
+  type        = map(any)
+  default = {
+    "container_name" = "terraform-npmapp-container"
+    "container_port" = "3000"
+  }
+}
+
+variable "ecr" {
+  description = "repository details like repo from where image is pushed and pulled, tag used for docker image"
+  type        = map(any)
+  default = {
+    "ecr_repo"  = "exa/npmapp"
+    "image_tag" = "latest"
+  }
+}
