@@ -55,6 +55,11 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
       "Effect": "Allow",
       "Action": "*",
       "Resource": ["arn:aws:secretsmanager:us-east-1:148432897343:secret:exa-github-WSkdoe"]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "ECS:*",
+      "Resource": "*"
     }
   ]
 }

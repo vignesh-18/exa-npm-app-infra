@@ -85,8 +85,8 @@ resource "aws_codepipeline" "codepipeline" {
       input_artifacts = ["build_output"]
 
       configuration = {
-        ClusterName = "npmapp-cluster"
-        ServiceName = "staging"
+        ClusterName = "terraform-npmapp-cluster"
+        ServiceName = "terraform-npmapp-service"
         FileName    = "imagedefinitions.json"
       }
     }
