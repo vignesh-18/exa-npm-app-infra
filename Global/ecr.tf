@@ -2,7 +2,7 @@ resource "aws_ecr_repository" "repo" {
   name = var.ecr["ecr_repo"]
 }
 
-resource "aws_ecr_lifecycle_policy" "repo-policy" {
+resource "aws_ecr_lifecycle_policy" "repo_policy" {
   repository = aws_ecr_repository.repo.name
 
   policy = <<EOF
@@ -37,10 +37,3 @@ resource "aws_ecr_lifecycle_policy" "repo-policy" {
 }
 EOF
 }
-
-# resource "null_resource" "pushs" {
-#     provisioner "local-exec" {
-#     command     = "${coalesce("./push.sh", "${path.module}/push.sh")} ${var.source_path} ${aws_ecr_repository.repo.repository_url} ${var.tag} ${data.aws_caller_identity.current.account_id}"
-#     interpreter = ["PowerShell", "-Command"]
-#   }
-# }

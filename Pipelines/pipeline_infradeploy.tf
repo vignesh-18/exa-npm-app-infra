@@ -1,7 +1,7 @@
 # CODEBUILD_PROJECT
 resource "aws_codebuild_project" "infra_repo_project" {
   name         = var.infra_build_project
-  service_role = aws_iam_role.codebuild-role.arn
+  service_role = aws_iam_role.codebuild_role.arn
 
   artifacts {
     type = "CODEPIPELINE"
@@ -63,9 +63,9 @@ resource "aws_codepipeline" "infracodepipeline" {
   }
 
   stage {
-    name = "Build"
+    name = "DeployInfra"
     action {
-      name             = "Build"
+      name             = "Deploy"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"

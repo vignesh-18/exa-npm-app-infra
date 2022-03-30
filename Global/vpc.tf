@@ -1,71 +1,96 @@
-/*
-retrieving default vpc details
-*/
-data "aws_vpc" "defaultvpc" {
-  default = true
-}
+resource "aws_vpc" "ecs_vpc" {
+  cidr_block = var.cidr
+  #   enable_dns_hostnames = true
 
-/*
-retrieving all subnets in default vpc
-*/
-data "aws_subnet_ids" "defaultsubnet" {
-  vpc_id = data.aws_vpc.defaultvpc.id
-}
-
-# data "aws_subnet" "test_subnet" {
-#   count = "${length(data.aws_subnet_ids.defaultsubnet.ids)}"
-#   id    = "${tolist(data.aws_subnet_ids.defaultsubnet.ids)[count.index]}"
-# }
-#
-# output "vpc_id" {
-#   value = data.aws_vpc.defaultvpc.id
-# }
-#
-# output "subnet_cidr_blocks" {
-#   value = ["${data.aws_subnet.test_subnet.*.id}"]
-# }
-
-/*
-creating a security group for application load balancer
-*/
-resource "aws_security_group" "lb" {
-  name        = "${var.tag}-lb-sg"
-  description = "controls access to the Application Load Balancer (ALB)"
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
+  tags = {
+    Name = "${var.prefix}-ecs-vpc"
   }
 }
 
-/*
-creating a security group for ecs tasks
-*/
-resource "aws_security_group" "ecs_tasks" {
-  name        = "${var.prefix}-ecs-tasks-sg"
-  description = "allow inbound access from the ALB only"
+resource "aws_subnet" "public_subnets" {
+  count                   = length(var.azs)
+  vpc_id                  = aws_vpc.ecs_vpc.id
+  availability_zone       = var.azs[count.index]
+  cidr_block              = var.public_subnets_ip[count.index]
+  map_public_ip_on_launch = true
 
-  ingress {
-    protocol        = "tcp"
-    from_port       = 3000
-    to_port         = 3000
-    cidr_blocks     = ["0.0.0.0/0"]
-    security_groups = [aws_security_group.lb.id]
+  tags = {
+    Name = "${var.prefix}-public-subnets"
+  }
+}
+
+resource "aws_subnet" "private_subnets" {
+  count                   = length(var.azs)
+  vpc_id                  = aws_vpc.ecs_vpc.id
+  availability_zone       = var.azs[count.index]
+  cidr_block              = var.private_subnets_ip[count.index]
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "${var.prefix}-private-subnets"
+  }
+}
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.ecs_vpc.id
+
+  tags = {
+    Name = "${var.prefix}-igw"
+  }
+}
+
+resource "aws_route_table" "public_table" {
+  vpc_id = aws_vpc.ecs_vpc.id
+}
+
+resource "aws_route" "public_route" {
+  route_table_id         = aws_route_table.public_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw.id
+}
+
+resource "aws_route_table_association" "public_subnet_association" {
+  count          = length(var.azs)
+  route_table_id = aws_route_table.public_table.id
+  subnet_id      = aws_subnet.public_subnets[count.index].id
+}
+
+resource "aws_route_table" "private_table" {
+  count  = length(var.azs)
+  vpc_id = aws_vpc.ecs_vpc.id
+
+  tags = {
+    Name = "${var.prefix}-privateable-${count.index}"
+  }
+}
+
+resource "aws_route" "private_route" {
+  count                  = length(var.azs)
+  route_table_id         = aws_route_table.private_table[count.index].id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_nat_gateway.nat[count.index].id
+}
+
+
+resource "aws_route_table_association" "private_subnet_association" {
+  count          = length(var.azs)
+  route_table_id = aws_route_table.private_table[count.index].id
+  subnet_id      = aws_subnet.private_subnets[count.index].id
+}
+
+resource "aws_nat_gateway" "nat" {
+  count         = length(var.azs)
+  allocation_id = aws_eip.ip[count.index].id
+  subnet_id     = aws_subnet.public_subnets[count.index].id
+
+  tags = {
+    Name = "${var.prefix}-nat-${count.index}"
   }
 
-  egress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  depends_on = [aws_internet_gateway.igw]
+}
+
+resource "aws_eip" "ip" {
+  count = length(var.azs)
+  vpc   = true
 }

@@ -67,7 +67,7 @@ EOF
 }
 
 #Provides an IAM role for codebuild
-resource "aws_iam_role" "codebuild-role" {
+resource "aws_iam_role" "codebuild_role" {
   name = "${var.prefix}-codebuild-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -84,9 +84,9 @@ resource "aws_iam_role" "codebuild-role" {
 }
 
 #Attaches an IAM role inline policy
-resource "aws_iam_role_policy" "codebuild-policy" {
+resource "aws_iam_role_policy" "codebuild_policy" {
   name = "${var.prefix}-codebuild-policy"
-  role = aws_iam_role.codebuild-role.name
+  role = aws_iam_role.codebuild_role.name
 
   policy = jsonencode({
     Version = "2012-10-17"

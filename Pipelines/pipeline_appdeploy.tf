@@ -1,7 +1,7 @@
 # CODEBUILD_PROJECT
-resource "aws_codebuild_project" "repo-project" {
+resource "aws_codebuild_project" "app_repo_project" {
   name         = var.build_project
-  service_role = aws_iam_role.codebuild-role.arn
+  service_role = aws_iam_role.codebuild_role.arn
 
   artifacts {
     type = "CODEPIPELINE"
@@ -27,7 +27,7 @@ resource "aws_s3_bucket" "codepipeline_bucket_app" {
 }
 
 #App Deployment Pipeline
-resource "aws_codepipeline" "codepipeline" {
+resource "aws_codepipeline" "appcodepipeline" {
   name     = "${var.prefix}-deploy-pipeline"
   role_arn = aws_iam_role.codepipeline_role.arn
 
