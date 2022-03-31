@@ -1,3 +1,4 @@
+#Custom VPC
 resource "aws_vpc" "ecs_vpc" {
   cidr_block = var.cidr
   #   enable_dns_hostnames = true
@@ -7,6 +8,7 @@ resource "aws_vpc" "ecs_vpc" {
   }
 }
 
+#Public subnets created in two AZs
 resource "aws_subnet" "public_subnets" {
   count                   = length(var.azs)
   vpc_id                  = aws_vpc.ecs_vpc.id
@@ -19,6 +21,7 @@ resource "aws_subnet" "public_subnets" {
   }
 }
 
+#Private subnets created in two AZs
 resource "aws_subnet" "private_subnets" {
   count                   = length(var.azs)
   vpc_id                  = aws_vpc.ecs_vpc.id
@@ -31,6 +34,7 @@ resource "aws_subnet" "private_subnets" {
   }
 }
 
+#Internet Gateway to connect public internet
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.ecs_vpc.id
 
@@ -39,22 +43,28 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
+#Public Subnets Route Table
 resource "aws_route_table" "public_table" {
   vpc_id = aws_vpc.ecs_vpc.id
 }
 
+#All Request from public subnet Routing to IGW
 resource "aws_route" "public_route" {
   route_table_id         = aws_route_table.public_table.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.igw.id
 }
 
+#Public subnet association with route table
 resource "aws_route_table_association" "public_subnet_association" {
   count          = length(var.azs)
   route_table_id = aws_route_table.public_table.id
   subnet_id      = aws_subnet.public_subnets[count.index].id
 }
-
+/*
+Two seperate route table for each private subnet. Each private subnet points to different nat gateway to have
+highly reselient NAT
+*/
 resource "aws_route_table" "private_table" {
   count  = length(var.azs)
   vpc_id = aws_vpc.ecs_vpc.id
@@ -90,6 +100,7 @@ resource "aws_nat_gateway" "nat" {
   depends_on = [aws_internet_gateway.igw]
 }
 
+# Elastic IP for NAT
 resource "aws_eip" "ip" {
   count = length(var.azs)
   vpc   = true

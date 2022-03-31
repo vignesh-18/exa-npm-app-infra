@@ -1,4 +1,4 @@
-#Provides an IAM role for pipeline
+# Provides an IAM role for pipeline
 resource "aws_iam_role" "codepipeline_role" {
   name = "${var.prefix}-codepipeline-role"
 
@@ -18,7 +18,7 @@ resource "aws_iam_role" "codepipeline_role" {
 EOF
 }
 
-#Attaches an IAM role inline policy
+# Attaches an IAM role inline policy
 resource "aws_iam_role_policy" "codepipeline_policy" {
   name = "${var.prefix}-codepipeline-policy"
   role = aws_iam_role.codepipeline_role.id
@@ -85,7 +85,7 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
 EOF
 }
 
-#Provides an IAM role for codebuild
+# Provides an IAM role for codebuild
 resource "aws_iam_role" "codebuild_role" {
   name = "${var.prefix}-codebuild-role"
   assume_role_policy = jsonencode({
@@ -102,7 +102,7 @@ resource "aws_iam_role" "codebuild_role" {
   })
 }
 
-#Attaches an IAM role inline policy
+# Attaches an IAM role inline policy
 resource "aws_iam_role_policy" "codebuild_policy" {
   name = "${var.prefix}-codebuild-policy"
   role = aws_iam_role.codebuild_role.name

@@ -13,6 +13,7 @@ variable "tag" {
   default     = "npmapp"
 }
 
+# ECS variables
 variable "ecs" {
   description = "container details like port container exposed to and container name"
   type        = map(any)
@@ -31,7 +32,8 @@ variable "ecr" {
   }
 }
 
-#VPC Details
+
+#VPC variables
 variable "cidr" {
   type    = string
   default = "10.16.0.0/16"

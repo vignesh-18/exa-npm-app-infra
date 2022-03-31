@@ -17,8 +17,7 @@ terraform {
 }
 
 /*
-Setting AWS region to deploy Resources and
-Path and profile to refer credentials
+Setting AWS region to deploy Resources 
 */
 provider "aws" {
   region = "us-east-1"

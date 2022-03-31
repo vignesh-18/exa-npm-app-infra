@@ -2,7 +2,7 @@
 creating a security group for application load balancer
 */
 resource "aws_security_group" "lb" {
-  name        = "${var.tag}-lb-sg"
+  name        = "${var.prefix}-lb-sg"
   description = "controls access to the Application Load Balancer (ALB)"
   vpc_id      = aws_vpc.ecs_vpc.id
 
@@ -33,7 +33,6 @@ resource "aws_security_group" "ecs_tasks" {
     protocol        = "tcp"
     from_port       = 3000
     to_port         = 3000
-    cidr_blocks     = ["0.0.0.0/0"]
     security_groups = [aws_security_group.lb.id]
   }
 

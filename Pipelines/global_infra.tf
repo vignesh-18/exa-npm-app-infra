@@ -1,7 +1,4 @@
-#----------------------------------------------
 # Role assumed by infra deploy code build role
-#----------------------------------------------
-
 resource "aws_iam_role" "assume_role" {
   name = "${var.prefix}-assume-role"
 
@@ -21,7 +18,7 @@ resource "aws_iam_role" "assume_role" {
 EOF
 }
 
-#Attaches an IAM role inline policy
+# Attaches an IAM role inline policy
 resource "aws_iam_role_policy" "assumerole_policy" {
   name = "${var.prefix}-assumerole-policy"
   role = aws_iam_role.assume_role.name
@@ -38,7 +35,7 @@ resource "aws_iam_role_policy" "assumerole_policy" {
   })
 }
 
-#storing assume role arn to parameter store
+# storing assume role arn to parameter store
 resource "aws_ssm_parameter" "assume_role" {
   name  = "assumerole"
   type  = "String"

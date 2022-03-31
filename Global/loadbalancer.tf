@@ -1,3 +1,4 @@
+#cretes and load balancer
 resource "aws_lb" "alb" {
   name               = "${var.prefix}-alb-npmapp"
   subnets            = ["${aws_subnet.public_subnets[0].id}", "${aws_subnet.public_subnets[1].id}"]
@@ -9,6 +10,7 @@ resource "aws_lb" "alb" {
   }
 }
 
+#creates a load balancer listener
 resource "aws_lb_listener" "http_forward" {
   load_balancer_arn = aws_lb.alb.arn
   port              = 80
@@ -20,6 +22,7 @@ resource "aws_lb_listener" "http_forward" {
   }
 }
 
+# creates target group and attached to load balancer
 resource "aws_lb_target_group" "tg" {
   name        = "${var.prefix}-alb-tg"
   port        = 3000

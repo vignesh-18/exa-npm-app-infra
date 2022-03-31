@@ -31,7 +31,7 @@ resource "aws_s3_bucket" "codepipeline_bucket_infra" {
   bucket = "${var.prefix}-infra-artifact-bucket"
 }
 
-#App Deployment Pipeline
+# App Deployment Pipeline
 resource "aws_codepipeline" "infracodepipeline" {
   name     = "${var.prefix}-infra-deploy-pipeline"
   role_arn = aws_iam_role.codepipeline_role.arn

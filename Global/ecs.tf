@@ -1,7 +1,9 @@
+#ECS cluster
 resource "aws_ecs_cluster" "npmcluster" {
   name = "${var.prefix}-cluster"
 }
 
+#renders a template from a template string
 data "template_file" "apptemplate" {
   template = file("./npmapp.json.tpl")
   vars = {
@@ -12,6 +14,7 @@ data "template_file" "apptemplate" {
   }
 }
 
+#ECS task definition creation
 resource "aws_ecs_task_definition" "task" {
   family                   = "npmapp"
   network_mode             = "awsvpc"
@@ -25,6 +28,7 @@ resource "aws_ecs_task_definition" "task" {
   }
 }
 
+#ECS service creation
 resource "aws_ecs_service" "service" {
   name            = "${var.prefix}-service"
   cluster         = aws_ecs_cluster.npmcluster.id
@@ -50,6 +54,7 @@ resource "aws_ecs_service" "service" {
   }
 }
 
+# cloud watch group for ECS
 resource "aws_cloudwatch_log_group" "lg" {
   name = "${var.prefix}-log-group"
 

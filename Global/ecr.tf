@@ -1,7 +1,9 @@
+# Creating ECR for push and pull images
 resource "aws_ecr_repository" "repo" {
   name = var.ecr["ecr_repo"]
 }
 
+# ECR images maintaining rules
 resource "aws_ecr_lifecycle_policy" "repo_policy" {
   repository = aws_ecr_repository.repo.name
 

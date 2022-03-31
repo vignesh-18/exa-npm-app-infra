@@ -1,6 +1,5 @@
-/*
-State file stored using backend(S3) from code pipeline.
-*/
+# State file stored using backend(S3) from code pipeline.
+
 terraform {
   required_providers {
     aws = {
@@ -17,11 +16,7 @@ terraform {
   }
 }
 
-/*
-Setting AWS region to deploy Resources and
-profile to refer credentials
-*/
-
+# Setting AWS region to deploy Resources and profile to refer credentials
 provider "aws" {
   region  = "us-east-1"
   profile = "general_account_personal"

@@ -26,7 +26,7 @@ resource "aws_s3_bucket" "codepipeline_bucket_app" {
   bucket = "${var.prefix}-app-artifact-bucket"
 }
 
-#App Deployment Pipeline
+# App Deployment Pipeline
 resource "aws_codepipeline" "appcodepipeline" {
   name     = "${var.prefix}-deploy-pipeline"
   role_arn = aws_iam_role.codepipeline_role.arn
@@ -73,7 +73,7 @@ resource "aws_codepipeline" "appcodepipeline" {
       }
     }
   }
-  #Deploys application latest changes deployed to ECS
+  # Deploys application latest changes deployed to ECS
   stage {
     name = "Deploy"
     action {
