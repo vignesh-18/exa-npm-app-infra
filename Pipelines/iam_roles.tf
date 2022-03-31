@@ -60,6 +60,25 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
       "Effect": "Allow",
       "Action": "ECS:*",
       "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "codedeploy:CreateDeployment",
+        "codedeploy:GetApplicationRevision",
+        "codedeploy:GetApplication",
+        "codedeploy:GetDeployment",
+        "codedeploy:GetDeploymentConfig",
+        "codedeploy:RegisterApplicationRevision"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iam:PassRole"
+      ],
+      "Resource": "*"
     }
   ]
 }
@@ -124,6 +143,23 @@ resource "aws_iam_role_policy" "codebuild_policy" {
           "s3:GetObjectVersion",
           "s3:GetBucketAcl",
         "s3:GetBucketLocation"]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+      {
+        Action = [
+          "ssm:AddTagsToResource",
+          "ssm:DeleteParameter",
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:GetParametersByPath",
+        "ssm:PutParameter"]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+      {
+        Action = [
+        "secretsmanager:GetSecretValue"]
         Effect   = "Allow"
         Resource = "*"
       }

@@ -1,31 +1,4 @@
 /*
-retrieving default vpc details
-*/
-# data "aws_vpc" "defaultvpc" {
-#   default = true
-# }
-
-# /*
-# retrieving all subnets in default vpc
-# */
-# data "aws_subnet_ids" "defaultsubnet" {
-#   vpc_id = data.aws_vpc.defaultvpc.id
-# }
-
-# data "aws_subnet" "test_subnet" {
-#   count = "${length(data.aws_subnet_ids.defaultsubnet.ids)}"
-#   id    = "${tolist(data.aws_subnet_ids.defaultsubnet.ids)[count.index]}"
-# }
-#
-# output "vpc_id" {
-#   value = data.aws_vpc.defaultvpc.id
-# }
-#
-# output "subnet_cidr_blocks" {
-#   value = ["${data.aws_subnet.test_subnet.*.id}"]
-# }
-
-/*
 creating a security group for application load balancer
 */
 resource "aws_security_group" "lb" {

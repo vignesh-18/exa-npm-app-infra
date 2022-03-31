@@ -12,7 +12,7 @@ resource "aws_iam_role" "assume_role" {
     {
       "Effect": "Allow",
       "Principal": {
-        "Service": "${aws_iam_role.codebuild_role.arn}"
+        "AWS": "${aws_iam_role.codebuild_role.arn}"
       },
       "Action": "sts:AssumeRole"
     }
@@ -30,7 +30,7 @@ resource "aws_iam_role_policy" "assumerole_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action = "*",
+        Action   = "*",
         Effect   = "Allow"
         Resource = "*"
       }

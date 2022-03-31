@@ -9,14 +9,13 @@ terraform {
     }
   }
   backend "s3" {
-    bucket                  = "terraform-exa-statefile-pipeline"
-    key                     = "backend_statefile"
-    region                  = "us-east-1"
-    profile                 = "general_account_personal"
-    dynamodb_table          = "tf-state-lock-dynamo-pipeline"
+    bucket         = "terraform-exa-statefile-pipeline"
+    key            = "backend_statefile"
+    region         = "us-east-1"
+    profile        = "general_account_personal"
+    dynamodb_table = "tf-state-lock-dynamo-pipeline"
   }
 }
-
 
 /*
 Setting AWS region to deploy Resources and
@@ -24,6 +23,6 @@ profile to refer credentials
 */
 
 provider "aws" {
-  region                   = "us-east-1"
-  profile                  = "general_account_personal"
+  region  = "us-east-1"
+  profile = "general_account_personal"
 }

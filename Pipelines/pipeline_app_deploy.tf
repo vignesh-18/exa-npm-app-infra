@@ -69,7 +69,7 @@ resource "aws_codepipeline" "appcodepipeline" {
       version          = "1"
 
       configuration = {
-        ProjectName = var.build_project    # Using build project to build docker image
+        ProjectName = var.build_project # Using build project to build docker image
       }
     }
   }
