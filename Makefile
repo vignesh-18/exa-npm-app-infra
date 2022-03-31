@@ -23,24 +23,22 @@ ifeq ($(detected_OS),Windows)
 	setx AWS_SHARED_CREDENTIALS_FILE "%USERPROFILE%\.aws\credentials"
 	pip install requests
 	pwd
-	cd ./Pipelines && pwd
-	ls
-	terraform init
+	cd ./Pipelines && terraform init
+	@echo ***terraform Installation Done***
 else
 	# Run MacOS commands
 	export AWS_SHARED_CREDENTIALS_FILE="$HOME/.aws/credentials"
 	pip install requests
 	brew install terraform
-	# path to move
-	terraform init
-
+	cd ./Pipelines && terraform init
+	@echo ***terraform Installation Done***
 endif
 
 plan: ## to view deployment plan
 	@echo ***creates an execution plan, which lets you preview the changes that Terraform plans to make to your infrastructure***
-	terraform plan
+	cd ./Pipelines && terraform plan
 
 apply: ## applies the changes
 	@echo ***executes the actions proposed in a Terraform plan to create, update, or destroy infrastructure***
-	terraform apply
+	cd ./Pipelines && terraform apply
 	@echo ***Deployement Completed***
