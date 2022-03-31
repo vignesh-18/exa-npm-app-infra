@@ -9,7 +9,7 @@ terraform {
   }
   backend "s3" {
     bucket         = "terraform-exa-statefile-pipeline"
-    key            = "backend_statefile"
+    key            = "pipeline_statefile"
     region         = "us-east-1"
     profile        = "general_account_personal"
     dynamodb_table = "tf-state-lock-dynamo-pipeline"
