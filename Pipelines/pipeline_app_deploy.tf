@@ -91,4 +91,5 @@ resource "aws_codepipeline" "appcodepipeline" {
       }
     }
   }
+  depends_on = [aws_codebuild_project.app_repo_project]
 }

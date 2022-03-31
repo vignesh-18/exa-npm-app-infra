@@ -38,4 +38,7 @@ plan                           to view deployment plan
 For windows, download the terraform exe using chocolatey or download directly
 INIT is the FIRST command to run when we run first time && PLAN is optional && APPLY is used to deploy the infra
 ```
+## Application Repo
+https://github.com/vignesh-18/exa-devops-assessment
 
+## Architecture Documentation
