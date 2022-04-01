@@ -1,0 +1,28 @@
+version: 0.2
+
+env:
+  parameter-store:
+    ROLE_NAME: assumerole
+
+phases:
+  install:
+    commands:
+      - "apt install unzip -y"
+      - "wget https://releases.hashicorp.com/terraform/1.0.5/terraform_1.0.5_linux_amd64.zip"
+      - "unzip terraform_1.0.5_linux_amd64.zip"
+      - "mv terraform /usr/local/bin/"
+  pre_build:
+    commands:
+      - echo 'Assuming TF Deployer IAM role'
+      - TF_DEPLOYER_ROLE=`aws sts assume-role --role-arn "${ROLE_NAME}" --role-session-name AWSCLI-Session`
+      - export AWS_ACCESS_KEY_ID=`echo "${TF_DEPLOYER_ROLE}" | jq -r '.Credentials.AccessKeyId'`
+      - export AWS_SECRET_ACCESS_KEY=`echo "${TF_DEPLOYER_ROLE}" | jq -r '.Credentials.SecretAccessKey'`
+      - export AWS_SESSION_TOKEN=`echo "${TF_DEPLOYER_ROLE}" | jq -r '.Credentials.SessionToken'`
+      - cd Global
+      - terraform init
+  build:
+    commands:
+      - terraform $TF_COMMAND -auto-approve
+  post_build:
+    commands:
+      - echo terraform $TF_COMMAND completed on `date`
