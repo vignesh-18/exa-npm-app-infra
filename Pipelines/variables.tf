@@ -19,7 +19,7 @@ variable "github_app" {
   default = {
     "owner"   = "vignesh-18"
     "repo"    = "exa-devops-assessment"
-    "branch"  = "dockerapp"
+    "branch"  = "main"
     "polling" = true
   }
 }
@@ -30,7 +30,7 @@ variable "github_infra" {
   default = {
     "owner"   = "vignesh-18"
     "repo"    = "exa-npm-app-infra"
-    "branch"  = "appinfra"
+    "branch"  = "main"
     "polling" = false
   }
 }

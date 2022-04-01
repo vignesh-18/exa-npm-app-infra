@@ -9,9 +9,9 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "terraform-exa-statefile-global"
-    key    = "backend_statefile"
-    region = "us-east-1"
+    bucket         = "terraform-exa-statefile-global"
+    key            = "backend_statefile"
+    region         = "us-east-1"
     dynamodb_table = "tf-state-lock-dynamo-global"
   }
 }

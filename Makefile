@@ -16,7 +16,8 @@ explain:
 	@echo " Choose a command to run: "                                                                                     
 	@cat Makefile* | grep -E '^[a-zA-Z_-]+:.*?## .*$$' | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 	@echo " For windows, download the terraform exe using chocolatey or download directly"    
-	@echo " INIT is the FIRST command to run when we run first time && PLAN is optional && APPLY is used to deploy the infra"                                                                                 
+	@echo " INIT is the FIRST command to run when we run first time && PLAN is optional && APPLY is used to deploy the infra"
+	@echo " Always deploy infrastructure first using 'infra-apply' command and deploy application secondly using 'app-apply' command"                                                                                 
 
 init: ## initialize the terraform
 ifeq ($(detected_OS),Windows)

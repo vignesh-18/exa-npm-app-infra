@@ -80,9 +80,9 @@ resource "aws_codepipeline" "infracodepipeline" {
   }
   depends_on = [
     aws_codebuild_project.infra_repo_project,
-    aws_iam_role_policy.codepipeline_policy, 
+    aws_iam_role_policy.codepipeline_policy,
     aws_iam_role_policy.codebuild_policy,
     aws_iam_role_policy.assumerole_policy,
     aws_ssm_parameter.assume_role
-    ]
+  ]
 }
