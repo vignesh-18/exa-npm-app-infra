@@ -37,11 +37,14 @@ Which will provide the following helpful commands:
 #               | |____ / . \  / ____ \              | |  __/ |  | | | (_| | || (_) | |  | | | | | |
 #               |______/_/ \_\/_/    \_\             |_|\___|_|  |_|  \__,_|_| \___/|_|  |_| |_| |_|
  Choose a command to run:
-apply                          applies the changes
+app-apply                      applies the changes
+app-plan                       to view deployment plan
+infra-apply                    applies the changes
+infra-plan                     to view deployment plan
 init                           initialize the terraform
-plan                           to view deployment plan
-For windows, download the terraform exe using chocolatey or download directly.
-INIT is the FIRST command to run when we run first time && PLAN is optional && APPLY is used to deploy the infra
+ For windows, download the terraform exe using chocolatey or download directly
+ INIT is the FIRST command to run when we run first time && PLAN is optional && APPLY is used to deploy the infra
+ Always deploy infrastructure first using 'infra-apply' command and deploy application secondly using 'app-apply' command
 ```
 ## Application Repo
 https://github.com/vignesh-18/exa-devops-assessment
