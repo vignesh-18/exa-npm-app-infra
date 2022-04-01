@@ -33,22 +33,22 @@ else
 	@echo ***terraform Installation Done***
 endif
 
-infra-plan: ## to view deployment plan
+infra-plan: ## to view deployment plan for infrastruture deployment
 	@echo ***creates an execution plan, which lets you preview the changes that Terraform plans to make to your infrastructure***
 	cd ./Pipelines && terraform plan -target aws_codepipeline.infracodepipeline
 	@echo ***Execution plan Created***
 
-app-plan: ## to view deployment plan
+app-plan: ## to view deployment plan for application deployment
 	@echo ***creates an execution plan, which lets you preview the changes that Terraform plans to make to your infrastructure***
 	cd ./Pipelines && terraform plan -target aws_codepipeline.appcodepipeline
 	@echo ***Execution plan Created***
 
-infra-apply: ## applies the changes
+infra-apply: ## applies the changes to create infrastruture 
 	@echo ***executes the actions proposed in a Terraform plan to create, update, or destroy infrastructure***
 	cd ./Pipelines && terraform apply -target aws_codepipeline.infracodepipeline -auto-approve
 	@echo ***Infra deploy Pipeline Created***
 
-app-apply: ## applies the changes
+app-apply: ## applies the changes to deploy application
 	@echo ***executes the actions proposed in a Terraform plan to create, update, or destroy infrastructure***
 	cd ./Pipelines && terraform apply -target aws_codepipeline.appcodepipeline -auto-approve
 	@echo ***Application deploy Pipeline Created***
